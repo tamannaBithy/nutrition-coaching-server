@@ -9,12 +9,14 @@ const fileUpload = require("express-fileupload");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJSDoc = require("swagger-jsdoc");
 
-//Security Middleware Import
+// Security Middleware Import
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const hpp = require("hpp");
 const morgan = require("morgan");
+
+const API_URL = "https://nutrition-coaching-server.onrender.com";
 
 // express app initialization
 const app = express();
@@ -36,15 +38,31 @@ app.use(
   })
 );
 
-app.use(helmet());
+// Configure Helmet to allow blob URLs in img-src
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'", "data:", "https://www.google-analytics.com"],
+        imgSrc: [
+          "'self'",
+          "data:",
+          "blob:",
+          "https://www.google-analytics.com",
+        ],
+      },
+    },
+  })
+);
+
 app.use(mongoSanitize());
 app.use(hpp());
 app.use(morgan("dev"));
 
-//Request Rate Limiting
+// Request Rate Limiting
 const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minutes
-  max: 10000, // limit each IP to 10000 requests per windowMs (change before the production)
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 10000, // limit each IP to 10000 requests per windowMs (change before production)
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
