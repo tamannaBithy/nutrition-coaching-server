@@ -7,11 +7,18 @@ const {
 } = require("../controllers/KetoCalcControllers");
 const { authMiddleware } = require("../middlewares/AuthMiddleware");
 const { isAdminMiddleware } = require("../middlewares/IsAdminMiddleware");
+// const {
+//   validateUserKetoData,
+//   validateUserMacroData,
+//   validateAdminKetoData,
+// } = require("../middlewares/KetoValidationMiddleware");
+
 const {
   validateUserKetoData,
   validateUserMacroData,
   validateAdminKetoData,
-} = require("../middlewares/KetoValidationMiddleware");
+} = require("../middlewares/ketoValidationMiddleware");
+
 const {
   validateErrorResult,
 } = require("../middlewares/DataValidationResultMiddleware");
