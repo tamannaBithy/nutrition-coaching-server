@@ -74,7 +74,7 @@ const generateCommonValidator = () => [
 ];
 
 // Validator for user keto data, extending common validators
-exports.validateUserKetoData = generateCommonValidator().concat([
+const validateUserKetoData = generateCommonValidator().concat([
   // Validator for 'diet_goal' field specific to user keto data
   body("diet_goal")
     .notEmpty()
@@ -88,7 +88,7 @@ exports.validateUserKetoData = generateCommonValidator().concat([
 
 // Validator for user macro data, extending common validators
 // Validator for user macro data, extending common validators
-exports.validateUserMacroData = generateCommonValidator().concat([
+const validateUserMacroData = generateCommonValidator().concat([
   // Validator for 'diet_goal' field specific to user macro data
   body("diet_goal")
     .notEmpty()
@@ -165,7 +165,7 @@ const fieldsToValidate = [
 ];
 
 // Validator for admin keto data, validating each field
-exports.validateAdminKetoData = fieldsToValidate.map((field) => {
+const validateAdminKetoData = fieldsToValidate.map((field) => {
   return body(field)
     .notEmpty()
     .withMessage({ en: `${field} is required`, ar: `ال${field} مطلوب` })
@@ -176,3 +176,9 @@ exports.validateAdminKetoData = fieldsToValidate.map((field) => {
     })
     .trim();
 });
+
+module.exports = {
+  validateUserKetoData,
+  validateUserMacroData,
+  validateAdminKetoData,
+};
