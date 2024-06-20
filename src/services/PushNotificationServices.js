@@ -1,3 +1,4 @@
+require("dotenv").config();
 const webPush = require("web-push");
 const SubscriptionModel = require("../models/SubscriptionModel");
 const PushNotificationModel = require("../models/PushNotificationModel");
@@ -5,8 +6,8 @@ const PushNotificationModel = require("../models/PushNotificationModel");
 // Set VAPID details for web push notifications
 webPush.setVapidDetails(
   "mailto:bimurto.bithy14@gmail.com", // Email address associated with the VAPID key
-  process.env.PUBLICKEY, // Public key for VAPID authentication
-  process.env.PRIVATEKEY // Private key for VAPID authentication
+  process.env.VAPID_PUBLIC_KEY, // Public key for VAPID authentication
+  process.env.VAPID_PRIVATE_KEY // Private key for VAPID authentication
 );
 
 /**
