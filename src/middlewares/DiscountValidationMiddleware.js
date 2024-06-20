@@ -1,77 +1,42 @@
-// Importing necessary modules from express-validator and mongoose
 const { body, validationResult, param } = require("express-validator");
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 
-// Custom validator function to check min and max values
 const minMaxValidator = (value, { req }) => {
   const { min, max } = req.body.ranges.find((range) => range.max === value);
   if (min >= max) {
-    throw new Error({
-      en: "Min must be less than max",
-      ar: "يجب أن يكون الحد الأدنى أقل من الحد الأقصى",
-    });
+    throw new Error("Min must be less than max");
   }
   return true;
 };
 
 const discountValidationRules = [
-  // Validate category field
   body("category")
     .notEmpty()
-    .withMessage({
-      en: "Category is required",
-      ar: "الفئة مطلوبة",
-    })
+    .withMessage("Category is required")
     .isIn(["mainMenu", "customizeOrder", "offers", "totalOrder"])
-    .withMessage({
-      en: "Invalid category",
-      ar: "فئة غير صالحة",
-    })
+    .withMessage("Invalid category")
     .trim(),
-  // Validate ranges field
   body("ranges")
     .notEmpty()
-    .withMessage({
-      en: "Ranges are required",
-      ar: "المدى مطلوب",
-    })
+    .withMessage("Ranges are required")
     .isArray()
-    .withMessage({
-      en: "Ranges must be an array",
-      ar: "يجب أن تكون المديات مصفوفة",
-    })
-    .custom((value, { req }) => {
+    .withMessage("Ranges must be an array")
+    .custom((value) => {
       if (!value.length) {
-        throw new Error({
-          en: "Ranges array cannot be empty",
-          ar: "مصفوفة المديات لا يمكن أن تكون فارغة",
-        });
+        throw new Error("Ranges array cannot be empty");
       }
-      for (let i = 0; i < value.length; i++) {
-        const range = value[i];
-        if (!range.hasOwnProperty("min")) {
-          throw new Error({
-            en: "Min value is required for each range",
-            ar: "القيمة الدنيا مطلوبة لكل مدى",
-          });
+      for (const range of value) {
+        if (!range.min) {
+          throw new Error("Min value is required for each range");
         }
-        if (!range.hasOwnProperty("max")) {
-          throw new Error({
-            en: "Max value is required for each range",
-            ar: "القيمة العظمى مطلوبة لكل مدى",
-          });
+        if (!range.max) {
+          throw new Error("Max value is required for each range");
         }
-        if (!range.hasOwnProperty("percentage")) {
-          throw new Error({
-            en: "Percentage value is required for each range",
-            ar: "النسبة المئوية مطلوبة لكل مدى",
-          });
+        if (!range.percentage) {
+          throw new Error("Percentage value is required for each range");
         }
-        if (!range.hasOwnProperty("isActive")) {
-          throw new Error({
-            en: "isActive value is required for each range",
-            ar: "قيمة isActive مطلوبة لكل مدى",
-          });
+        if (typeof range.isActive === "undefined") {
+          throw new Error("isActive value is required for each range");
         }
       }
       return true;
@@ -79,88 +44,41 @@ const discountValidationRules = [
 ];
 
 const updateDiscountValidationRules = [
-  // Validate min field
   body("min")
     .notEmpty()
-    .withMessage({
-      en: "Min value is required",
-      ar: "القيمة الدنيا مطلوبة",
-    })
-    .isInt({
-      message: {
-        en: "Must be an integer.",
-        ar: "يجب أن يكون عددًا صحيحًا.",
-      },
-    }),
-
-  // Validate max field
+    .withMessage("Min value is required")
+    .isInt()
+    .withMessage("Must be an integer."),
   body("max")
     .notEmpty()
-    .withMessage({
-      en: "Max value is required",
-      ar: "القيمة العظمى مطلوبة",
-    })
-    .isInt({
-      message: {
-        en: "Must be an integer.",
-        ar: "يجب أن يكون عددًا صحيحًا.",
-      },
-    }),
-
-  // Validate percentage field
+    .withMessage("Max value is required")
+    .isInt()
+    .withMessage("Must be an integer."),
   body("percentage")
     .notEmpty()
-    .withMessage({
-      en: "Percentage value is required",
-      ar: "قيمة النسبة المئوية مطلوبة",
-    })
-    .isInt({
-      message: {
-        en: "Must be an integer.",
-        ar: "يجب أن يكون عددًا صحيحًا.",
-      },
-    }),
-
-  // Validate isActive field
+    .withMessage("Percentage value is required")
+    .isInt()
+    .withMessage("Must be an integer."),
   body("isActive")
-    .custom((value) => {
-      if (typeof value !== "boolean") {
-        throw new Error({
-          en: "Invalid isActive value. Please provide a valid boolean value.",
-          ar: "قيمة isActive غير صالحة. يرجى تقديم قيمة قيمة بولية (صحيحة/خاطئة) صالحة.",
-        });
-      }
-      return true;
-    })
-    .withMessage({
-      en: "Invalid isActive value. Please provide a valid boolean value.",
-      ar: "قيمة isActive غير صالحة. يرجى تقديم قيمة قيمة بولية (صحيحة/خاطئة) صالحة.",
-    }),
+    .isBoolean()
+    .withMessage(
+      "Invalid isActive value. Please provide a valid boolean value."
+    ),
 ];
 
-// Middleware for validating MongoDB ObjectId parameter for discount
 const validateMongooseDiscountIdMiddleware = [
-  // Custom validator for discountId parameter
   param("discountId").custom((value) => {
     if (!mongoose.Types.ObjectId.isValid(value)) {
-      throw new Error({
-        en: "Invalid ID",
-        ar: "معرف غير صالح",
-      });
+      throw new Error("Invalid ID");
     }
     return true;
   }),
 ];
 
-// Middleware for validating MongoDB ObjectId parameter for range
 const validateMongooseRangeIdIdMiddleware = [
-  // Custom validator for rangeId parameter
   param("rangeId").custom((value) => {
     if (!mongoose.Types.ObjectId.isValid(value)) {
-      throw new Error({
-        en: "Invalid ID",
-        ar: "معرف غير صالح",
-      });
+      throw new Error("Invalid ID");
     }
     return true;
   }),
