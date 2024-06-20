@@ -8,12 +8,19 @@ const {
   updateDiscountController,
   deleteDiscountController,
 } = require("../controllers/DiscountControllers");
-const {
-  discountValidationRules,
-  updateDiscountValidationRules,
-  validateMongooseDiscountIdMiddleware,
-  validateMongooseRangeIdIdMiddleware,
-} = require("../middlewares/discountValidationMiddleware");
+
+// const {
+//   validateMongooseRangeIdIdMiddleware,
+//   validateMongooseDiscountIdMiddleware,
+//   updateDiscountValidationRules,
+//   discountValidationRules,
+// } = require("../middlewares/DiscountValidationMiddleware");
+
+import discountValidationRules from "../middlewares/DiscountValidationMiddleware";
+import validateMongooseRangeIdIdMiddleware from "../middlewares/DiscountValidationMiddleware";
+import validateMongooseDiscountIdMiddleware from "../middlewares/DiscountValidationMiddleware";
+import updateDiscountValidationRules from "../middlewares/DiscountValidationMiddleware";
+
 const {
   validateErrorResult,
 } = require("../middlewares/DataValidationResultMiddleware");
