@@ -14,7 +14,7 @@ const minMaxValidator = (value, { req }) => {
   return true;
 };
 
-exports.discountValidationRules = [
+const discountValidationRules = [
   // Validate category field
   body("category")
     .notEmpty()
@@ -78,7 +78,7 @@ exports.discountValidationRules = [
     }),
 ];
 
-exports.updateDiscountValidationRules = [
+const updateDiscountValidationRules = [
   // Validate min field
   body("min")
     .notEmpty()
@@ -139,7 +139,7 @@ exports.updateDiscountValidationRules = [
 ];
 
 // Middleware for validating MongoDB ObjectId parameter for discount
-exports.validateMongooseDiscountIdMiddleware = [
+const validateMongooseDiscountIdMiddleware = [
   // Custom validator for discountId parameter
   param("discountId").custom((value) => {
     if (!mongoose.Types.ObjectId.isValid(value)) {
@@ -153,7 +153,7 @@ exports.validateMongooseDiscountIdMiddleware = [
 ];
 
 // Middleware for validating MongoDB ObjectId parameter for range
-exports.validateMongooseRangeIdIdMiddleware = [
+const validateMongooseRangeIdIdMiddleware = [
   // Custom validator for rangeId parameter
   param("rangeId").custom((value) => {
     if (!mongoose.Types.ObjectId.isValid(value)) {
@@ -165,3 +165,10 @@ exports.validateMongooseRangeIdIdMiddleware = [
     return true;
   }),
 ];
+
+module.exports = {
+  validateMongooseRangeIdIdMiddleware,
+  validateMongooseDiscountIdMiddleware,
+  updateDiscountValidationRules,
+  discountValidationRules,
+};
