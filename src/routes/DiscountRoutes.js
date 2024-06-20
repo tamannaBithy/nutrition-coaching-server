@@ -9,17 +9,12 @@ const {
   deleteDiscountController,
 } = require("../controllers/DiscountControllers");
 
-// const {
-//   validateMongooseRangeIdIdMiddleware,
-//   validateMongooseDiscountIdMiddleware,
-//   updateDiscountValidationRules,
-//   discountValidationRules,
-// } = require("../middlewares/DiscountValidationMiddleware");
-
-import discountValidationRules from "../middlewares/DiscountValidationMiddleware";
-import validateMongooseRangeIdIdMiddleware from "../middlewares/DiscountValidationMiddleware";
-import validateMongooseDiscountIdMiddleware from "../middlewares/DiscountValidationMiddleware";
-import updateDiscountValidationRules from "../middlewares/DiscountValidationMiddleware";
+const {
+  validateMongooseRangeIdIdMiddleware,
+  validateMongooseDiscountIdMiddleware,
+  updateDiscountValidationRules,
+  discountValidationRules,
+} = require("../middlewares/DiscountValidationMiddleware");
 
 const {
   validateErrorResult,
@@ -30,7 +25,6 @@ const {
 
 const router = express.Router();
 
-// Create a new discount for orders
 router.post(
   "/discounts-for-order",
   authMiddleware,
@@ -40,7 +34,6 @@ router.post(
   createDiscountController
 );
 
-// Get all discounts for orders
 router.get(
   "/discounts-for-order",
   authMiddleware,
@@ -50,15 +43,15 @@ router.get(
   getAllDiscountController
 );
 
-// Get details of a specific discount for orders by ID
 router.get(
   "/discounts-for-order/:discountId",
   authMiddleware,
   isAdminMiddleware,
+  validateMongooseDiscountIdMiddleware,
+  validateErrorResult,
   getDiscountByIdController
 );
 
-// Update a discount for orders by ID
 router.put(
   "/discounts-for-order/:discountId/:rangeId",
   authMiddleware,
@@ -70,7 +63,6 @@ router.put(
   updateDiscountController
 );
 
-// Delete a discount for orders by ID
 router.delete(
   "/discounts-for-order/:discountId/:rangeId",
   authMiddleware,
